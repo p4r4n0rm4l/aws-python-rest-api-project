@@ -16,6 +16,7 @@ var/
 .installed.cfg
 *.egg
 package-lock.json
+__pycache__
 
 # Enviroment variables
 env.yml
