@@ -4,16 +4,50 @@ service: aws-python-rest-api-project
 
 frameworkVersion: '2'
 
+plugins:
+  - serverless-offline
+  - serverless-plugin-warmup
+  - serverless-api-gateway-caching
 
 provider:
   name: aws
   runtime: python3.8
-  lambdaHashingVersion: '20201221'
+  lambdaHashingVersion: 20201221
+  profile: ${file(./env.yml):dynamic-fields.${opt:stage, self:provider.stage}.PROFILE}
+  versionFunctions: false
+  memorySize: 512 # default is 1024
+  tags:
+    author: ioan.kapageridis@gmail.com
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-1
+  environment: ${file(./env.yml):${opt:stage, self:provider.stage}}
+  # apiKeys:
+  #  - VmgKey-${opt:stage}
+  iamRoleStatements: # Adding policy lambda invoke function for the warm up plugin
+    - Effect: 'Allow'
+      Action:
+        - 'lambda:InvokeFunction'
+      Resource: "*"
+
+custom:
+  serverless-offline:
+    # httpsProtocol: "dev-certs"
+    # port: 4000
+  apiGatewayCaching:
+    enable: false
+    # ttlInSeconds: 300
+  warmup:
+    enabled:
+      - prod
+    memorySize: 128
+    timeout: 30
+    events: 
+      - schedule: 'cron(*/10 * ? * * *)' # Run warmup every 10 minutes
+    prewarm: true
+    payloadRaw: true
+    concurrency: ${file(./env.yml):dynamic-fields.${opt:stage, self:provider.stage}.WARMUP_CONCURRENCY}
 
 functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: /
-          method: get
+  - ${file(./serverless-functions.yml)}
+
+resources: ${file(./serverless-resources.yml)}

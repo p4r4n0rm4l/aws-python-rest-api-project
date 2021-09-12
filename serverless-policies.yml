@@ -1,0 +1,33 @@
+policies: # Policies for IAM Roles
+
+  AdminLambda:
+    PolicyName: AdminFullAccess
+    PolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Action:
+            - "*"
+          Resource: "*"
+  
+  LogLambda:
+    PolicyName: Log-Lambda
+    PolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource: "*"
+  
+  S3Lambda:
+    PolicyName: S3-Lambda
+    PolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Action:
+            - s3:*
+          Resource: "*"

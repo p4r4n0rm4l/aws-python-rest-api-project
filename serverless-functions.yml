@@ -1,0 +1,26 @@
+hello:
+  handler: handler.hello
+  role: Admin
+  # warmup:
+  #   enable: false
+  events:
+    - http:
+        path: /hello
+        method: GET
+        # private: true
+        caching:
+          enabled: false
+        cors: true
+        # authorizer:
+        #   arn: ${file(./env.yml):${opt:stage, self:provider.stage}.USER_POOL_ARN}
+        #   scopes:
+        #     - aws.cognito.signin.user.admin
+
+# userindb:
+#   handler: handler.userindb
+#   role: Admin
+#   events:
+#     - cognitoUserPool:
+#       pool: onoma tou pool
+#       trigger: PostConfirmation
+#       existing: true

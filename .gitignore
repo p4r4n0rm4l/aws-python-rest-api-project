@@ -15,6 +15,26 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+package-lock.json
+
+# Enviroment variables
+env.yml
 
 # Serverless directories
 .serverless
+
+# package directories
+node_modules
+jspm_packages
+
+# temporary testing files
+temp_files
+
+# Serverless directories
+.serverless
+
+# vscode files
+.vscode
+
+# txt files
+.txt

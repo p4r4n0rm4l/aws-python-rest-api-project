@@ -1,0 +1,54 @@
+Resources:
+
+  # IAM Roles definition
+  Admin:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Admin-${self:service}-${self:provider.stage}
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - ${file(./serverless-policies.yml):policies.AdminLambda}
+  
+  User:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: User-${self:service}-${self:provider.stage}
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - ${file(./serverless-policies.yml):policies.LogLambda}
+        
+            
+  # # Cognito - User pool
+  # CognitoUserPool:
+  #   Type: AWS::Cognito::UserPool
+  #   Properties:
+  #     UserPoolName: ${self:provider.stage}-user-pool
+  #     UsernameAttributes:
+  #       - email
+  #     AutoVerifiedAttributes:
+  #       - email
+      
+  # # Cognito Client
+  # CognitoUserPoolClient:
+  #   Type: AWS::Cognito::UserPoolClient
+  #   Properties:
+  #     ClientName: ${self:provider.stage}-user-pool-client
+  #     UserPoolId:
+  #       Ref: CognitoUserPool
+  #     ExplicitAuthFlows:
+  #       - ADMIN_NO_SRP_AUTH
+  #     GenerateSecret: false
